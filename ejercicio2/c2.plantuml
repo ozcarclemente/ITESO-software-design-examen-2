@@ -1,0 +1,36 @@
+@startuml
+title C2 – Diagrama de Contenedores del Sistema de Reportes
+
+actor "Usuario" as User
+
+node "Aplicación de Reportes" as App {
+
+  component "ReportSystem" as RS
+  component "HistoryManager" as HM
+
+  component "ReportFactory"
+  component "FormatFactory"
+  component "DeliveryFactory"
+
+  component "Report Strategies\n(SalesReport, InventoryReport, FinancialReport)" as ReportStrategies
+  component "Format Strategies\n(PDF, Excel, HTML)" as FormatStrategies
+  component "Delivery Strategies\n(Email, Download, Cloud)" as DeliveryStrategies
+
+  component "ReportBuilder"
+}
+
+User --> RS : Solicita generación de reporte
+RS --> ReportFactory : Crea estrategia de reporte
+RS --> FormatFactory : Crea estrategia de formato
+RS --> DeliveryFactory : Crea estrategia de entrega
+
+ReportFactory --> ReportStrategies
+FormatFactory --> FormatStrategies
+DeliveryFactory --> DeliveryStrategies
+
+RS --> ReportBuilder : Construcción del contenido
+RS --> HM : Guarda historial
+
+@enduml
+
+

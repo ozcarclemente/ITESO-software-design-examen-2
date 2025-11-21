@@ -1,0 +1,102 @@
+@startuml
+title C3 – Diagrama de Componentes del Sistema de Reportes
+
+actor "Usuario" as User
+
+' ================================
+'   MÓDULO PRINCIPAL
+' ================================
+package "Módulo Sistema" {
+    component "ReportSystem"
+    component "HistoryManager"
+}
+
+' ================================
+'   MÓDULO BUILDER
+' ================================
+package "Módulo Builder" {
+    component "ReportBuilder"
+}
+
+' ================================
+'   MÓDULO TEMPLATE METHOD
+' ================================
+package "Módulo Reportes" {
+    component "ReportStrategy"
+    component "SalesReport"
+    component "InventoryReport"
+    component "FinancialReport"
+}
+
+' ================================
+'   MÓDULO FORMATOS
+' ================================
+package "Módulo Formatos" {
+    component "FormatStrategy"
+    component "PDFFormatter"
+    component "ExcelFormatter"
+    component "HTMLFormatter"
+}
+
+' ================================
+'   MÓDULO ENTREGAS
+' ================================
+package "Módulo Entrega" {
+    component "DeliveryStrategy"
+    component "EmailDelivery"
+    component "DownloadDelivery"
+    component "CloudDelivery"
+}
+
+' ================================
+'   MÓDULO FACTORIES
+' ================================
+package "Módulo Factories" {
+    component "ReportFactory"
+    component "FormatFactory"
+    component "DeliveryFactory"
+}
+
+' =====================================
+'   RELACIONES
+' =====================================
+
+User --> "ReportSystem" : Genera reporte
+
+"ReportSystem" --> "HistoryManager" : Guarda historial
+"ReportSystem" --> "ReportFactory" : Obtiene estrategia de reporte
+"ReportSystem" --> "FormatFactory" : Obtiene estrategia de formato
+"ReportSystem" --> "DeliveryFactory" : Obtiene estrategia de entrega
+
+"ReportFactory" --> "SalesReport"
+"ReportFactory" --> "InventoryReport"
+"ReportFactory" --> "FinancialReport"
+
+"FormatFactory" --> "PDFFormatter"
+"FormatFactory" --> "ExcelFormatter"
+"FormatFactory" --> "HTMLFormatter"
+
+"DeliveryFactory" --> "EmailDelivery"
+"DeliveryFactory" --> "DownloadDelivery"
+"DeliveryFactory" --> "CloudDelivery"
+
+"ReportSystem" --> "ReportStrategy" : Genera contenido
+"ReportSystem" --> "FormatStrategy" : Da formato al reporte
+"ReportSystem" --> "DeliveryStrategy" : Entrega el reporte
+
+"ReportStrategy" --> "ReportBuilder" : Construye contenido
+
+"ReportStrategy" <|-- "SalesReport"
+"ReportStrategy" <|-- "InventoryReport"
+"ReportStrategy" <|-- "FinancialReport"
+
+"FormatStrategy" <|-- "PDFFormatter"
+"FormatStrategy" <|-- "ExcelFormatter"
+"FormatStrategy" <|-- "HTMLFormatter"
+
+"DeliveryStrategy" <|-- "EmailDelivery"
+"DeliveryStrategy" <|-- "DownloadDelivery"
+"DeliveryStrategy" <|-- "CloudDelivery"
+
+
+@enduml

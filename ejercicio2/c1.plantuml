@@ -1,0 +1,12 @@
+@startuml
+title C1 – Diagrama de Contexto del Sistema de Reportes
+
+actor "Usuario" as User
+
+rectangle "Sistema de Generación de Reportes" as ReportSystem
+
+User --> ReportSystem : Solicita generación de reporte
+ReportSystem --> User : Retorna reporte generado
+ReportSystem --> User : Muestra historial de reportes
+
+@enduml

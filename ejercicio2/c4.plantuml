@@ -1,0 +1,147 @@
+@startuml
+title C4 – Diagrama de Clases del Sistema de Reportes
+
+' =====================================
+' BUILDER
+' =====================================
+
+class ReportBuilder {
+    - parts : list
+    + add(text : str)
+    + separator()
+    + header(title : str)
+    + build() : str
+}
+
+' =====================================
+' TEMPLATE METHOD (Reportes)
+' =====================================
+
+abstract class ReportStrategy {
+    + generate(data, timestamp : str) : str
+    + title()
+    + body(builder : ReportBuilder, data)
+}
+
+class SalesReport {
+    + title()
+    + body(builder, data)
+}
+
+class InventoryReport {
+    + title()
+    + body(builder, data)
+}
+
+class FinancialReport {
+    + title()
+    + body(builder, data)
+}
+
+ReportStrategy <|-- SalesReport
+ReportStrategy <|-- InventoryReport
+ReportStrategy <|-- FinancialReport
+
+' =====================================
+' FORMATOS (Strategy)
+' =====================================
+
+abstract class FormatStrategy {
+    + format(content : str) : str
+}
+
+class PDFFormatter {
+    + format(content : str) : str
+}
+
+class ExcelFormatter {
+    + format(content : str) : str
+}
+
+class HTMLFormatter {
+    + format(content : str) : str
+}
+
+FormatStrategy <|-- PDFFormatter
+FormatStrategy <|-- ExcelFormatter
+FormatStrategy <|-- HTMLFormatter
+
+' =====================================
+' ENTREGA (Strategy)
+' =====================================
+
+abstract class DeliveryStrategy {
+    + deliver(formatted_report : str, report_type : str, output_format : str)
+}
+
+class EmailDelivery {
+    + deliver(formatted_report, report_type, output_format)
+}
+
+class DownloadDelivery {
+    + deliver(formatted_report, report_type, output_format)
+}
+
+class CloudDelivery {
+    + deliver(formatted_report, report_type, output_format)
+}
+
+DeliveryStrategy <|-- EmailDelivery
+DeliveryStrategy <|-- DownloadDelivery
+DeliveryStrategy <|-- CloudDelivery
+
+' =====================================
+' FACTORIES
+' =====================================
+
+class ReportFactory {
+    - _strategies
+    + create(report_type : str) : ReportStrategy
+}
+
+class FormatFactory {
+    - _strategies
+    + create(output_format : str) : FormatStrategy
+}
+
+class DeliveryFactory {
+    - _strategies
+    + create(delivery_method : str) : DeliveryStrategy
+}
+
+' =====================================
+' HISTORIAL
+' =====================================
+
+class HistoryManager {
+    - _reports : list
+    + save(record : dict)
+    + get_all()
+}
+
+' =====================================
+' SISTEMA PRINCIPAL
+' =====================================
+
+class ReportSystem {
+    - history : HistoryManager
+    + generate_report(report_type, data, output_format, delivery_method)
+    + get_report_history()
+}
+
+' =====================================
+' RELACIONES
+' =====================================
+
+ReportSystem --> ReportFactory
+ReportSystem --> FormatFactory
+ReportSystem --> DeliveryFactory
+
+ReportSystem --> ReportStrategy : usa para generar contenido
+ReportSystem --> FormatStrategy : usa para formato
+ReportSystem --> DeliveryStrategy : usa para entrega
+
+ReportStrategy --> ReportBuilder : construye contenido
+ReportSystem --> HistoryManager : guarda historial
+
+@enduml
