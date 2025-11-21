@@ -1,0 +1,21 @@
+@startuml
+title C2 – Diagrama de Contenedores del Sistema de Procesamiento de Pedidos
+
+node "Aplicación de Procesamiento de Pedidos" as App {
+  
+  component "OrderProcessor" as OP
+  component "NotificationFactory" as NF
+  component "Estrategias de Notificación\n(Email, SMS, Push)" as Strategies
+  component "HistoryManager" as HM
+}
+
+actor "Usuario" as User
+
+User --> OP : Envía datos del pedido
+OP --> NF : Solicita estrategia de notificación
+NF --> Strategies : Instancia estrategia concreta
+OP --> Strategies : Envía notificación
+OP --> HM : Guarda registro en historial
+User <-- OP : Estado final y resumen
+
+@enduml

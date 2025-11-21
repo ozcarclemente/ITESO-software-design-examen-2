@@ -1,0 +1,11 @@
+@startuml
+title C1 – Diagrama de Contexto del Sistema de Notificaciones de Pedidos
+
+actor "Usuario" as User
+
+rectangle "Sistema de Procesamiento de Pedidos y Notificaciones" as SPS
+
+User --> SPS : Proporciona datos del pedido
+SPS --> User : Notificaciones generadas
+
+@enduml

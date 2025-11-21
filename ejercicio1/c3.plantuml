@@ -1,0 +1,40 @@
+@startuml
+title C3 – Diagrama de Componentes del Sistema de Procesamiento de Pedidos
+
+package "Módulo Procesamiento" {
+  component "OrderProcessor"
+  component "OrderInfo"
+}
+
+package "Módulo Historial" {
+  component "HistoryManager"
+}
+
+package "Módulo Notificaciones" {
+  component "NotificationStrategy"
+  component "EmailNotification"
+  component "SMSNotification"
+  component "PushNotification"
+  component "NotificationFactory"
+}
+
+actor "Usuario"
+
+"Usuario" --> "OrderProcessor" : Envía datos del pedido
+
+"OrderProcessor" --> "OrderInfo" : Crea información del pedido
+"OrderProcessor" --> "NotificationFactory" : Solicita estrategia
+
+"EmailNotification" --|> "NotificationStrategy"
+"SMSNotification" --|> "NotificationStrategy"
+"PushNotification" --|> "NotificationStrategy"
+
+"NotificationFactory" --> "EmailNotification"
+"NotificationFactory" --> "SMSNotification"
+"NotificationFactory" --> "PushNotification"
+
+"OrderProcessor" --> "NotificationStrategy" : Ejecuta envío
+"OrderProcessor" --> "HistoryManager" : Guarda registro
+
+
+@enduml

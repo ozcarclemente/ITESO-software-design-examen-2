@@ -1,0 +1,77 @@
+@startuml
+title C4 – Diagrama de Clases del Sistema de Procesamiento de Pedidos
+
+' =======================
+' Clases principales
+' =======================
+
+class OrderProcessor {
+  - history : HistoryManager
+  + process_order(order_data, notification_types)
+  + get_history()
+}
+
+class OrderInfo {
+  - customer
+  - order_id
+  - total
+  - name
+  - email
+  - phone
+  - device
+  + __init__(order_data)
+}
+
+class HistoryManager {
+  - notifications : list
+  + save(notification_record)
+  + get_all()
+}
+
+' =======================
+' Patrón Estrategia
+' =======================
+
+abstract class NotificationStrategy {
+  + send(info : OrderInfo)
+}
+
+class EmailNotification {
+  + send(info : OrderInfo)
+}
+
+class SMSNotification {
+  + send(info : OrderInfo)
+}
+
+class PushNotification {
+  + send(info : OrderInfo)
+}
+
+' =======================
+' Factory
+' =======================
+
+class NotificationFactory {
+  - _strategies
+  + create(notification_type)
+}
+
+' =======================
+' Relaciones
+' =======================
+
+OrderProcessor --> OrderInfo : crea
+OrderProcessor --> NotificationFactory : solicita estrategia
+OrderProcessor --> NotificationStrategy : usa (polimorfismo)
+OrderProcessor --> HistoryManager : guarda notificación
+
+NotificationFactory --> EmailNotification
+NotificationFactory --> SMSNotification
+NotificationFactory --> PushNotification
+
+NotificationStrategy <|-- EmailNotification
+NotificationStrategy <|-- SMSNotification
+NotificationStrategy <|-- PushNotification
+
+@enduml
